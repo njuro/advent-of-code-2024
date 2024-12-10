@@ -48,6 +48,11 @@ class AdventOfCodeTasksTest {
         runTaskTest(Files(), 6435922584968, 6469636832766)
     }
 
+    @Test
+    fun day10() {
+        runTaskTest(Trails(), 557, 1062)
+    }
+
     private fun runTaskTest(task: AdventOfCodeTask, part1Result: Any, part2Result: Any) {
         assertEquals(part1Result, task.run())
         assertEquals(part2Result, task.run(part2 = true))
