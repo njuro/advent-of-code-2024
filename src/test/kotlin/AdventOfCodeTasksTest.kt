@@ -63,6 +63,11 @@ class AdventOfCodeTasksTest {
         runTaskTest(Fences(), 1489582, 914966)
     }
 
+    @Test
+    fun day13() {
+        runTaskTest(Automates(), 40369L, 72587986598368L)
+    }
+
     private fun runTaskTest(task: AdventOfCodeTask, part1Result: Any, part2Result: Any) {
         assertEquals(part1Result, task.run())
         assertEquals(part2Result, task.run(part2 = true))
