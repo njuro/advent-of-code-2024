@@ -74,6 +74,11 @@ class AdventOfCodeTasksTest {
     }
 
     @Test
+    fun day15() {
+        runTaskTest(Boxes(), 1514333, 1528453)
+    }
+
+    @Test
     fun day16() {
         runTaskTest(Maze(), 65436, 489)
     }
