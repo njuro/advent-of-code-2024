@@ -78,6 +78,11 @@ class AdventOfCodeTasksTest {
         runTaskTest(Maze(), 65436, 489)
     }
 
+    @Test
+    fun day17() {
+        runTaskTest(Registers(), "6,7,5,2,1,3,5,1,7", 216549846240877L)
+    }
+
 
     private fun runTaskTest(task: AdventOfCodeTask, part1Result: Any, part2Result: Any) {
         assertEquals(part1Result, task.run())
