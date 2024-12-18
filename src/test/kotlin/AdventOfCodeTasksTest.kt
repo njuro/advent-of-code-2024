@@ -88,6 +88,10 @@ class AdventOfCodeTasksTest {
         runTaskTest(Registers(), "6,7,5,2,1,3,5,1,7", 216549846240877L)
     }
 
+    @Test
+    fun day18() {
+        runTaskTest(Paths(), 282, "64,29")
+    }
 
     private fun runTaskTest(task: AdventOfCodeTask, part1Result: Any, part2Result: Any) {
         assertEquals(part1Result, task.run())
