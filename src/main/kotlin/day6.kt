@@ -3,7 +3,7 @@ import utils.Direction
 import utils.readInputLines
 
 /** [https://adventofcode.com/2024/day/6] */
-class Day6 : AdventOfCodeTask {
+class Guards : AdventOfCodeTask {
     override fun run(part2: Boolean): Any {
         val map = readInputLines("6.txt").flatMapIndexed { y, line ->
             line.mapIndexed { x, c -> Coordinate(x, y) to c }
@@ -38,5 +38,5 @@ class Day6 : AdventOfCodeTask {
 }
 
 fun main() {
-    print(Day6().run(part2 = true))
+    print(Guards().run(part2 = true))
 }

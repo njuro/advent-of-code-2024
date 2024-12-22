@@ -30,7 +30,7 @@ class AdventOfCodeTasksTest {
 
     @Test
     fun day06() {
-        runTaskTest(Day6(), 4602, 1703)
+        runTaskTest(Guards(), 4602, 1703)
     }
 
     @Test
@@ -101,6 +101,16 @@ class AdventOfCodeTasksTest {
     @Test
     fun day20() {
         runTaskTest(Cheats(), 1346, 985482)
+    }
+
+    @Test
+    fun day21() {
+        runTaskTest(Codes(), 278748L, 337744744231414L)
+    }
+
+    @Test
+    fun day22() {
+        runTaskTest(Sellers(), 12759339434L, 1405)
     }
 
     private fun runTaskTest(task: AdventOfCodeTask, part1Result: Any, part2Result: Any) {
