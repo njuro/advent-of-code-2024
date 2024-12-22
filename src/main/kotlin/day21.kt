@@ -32,7 +32,7 @@ class Codes : AdventOfCodeTask {
                     return@computeIfAbsent setOf("A")
                 }
                 val seen = mutableSetOf<Coordinate>()
-                val start = entries.singleOrNull { it.value == fromButton }?.key ?: error("Wtf $fromButton $toButton")
+                val start = entries.single { it.value == fromButton }.key
                 val queue = mutableListOf("" to start)
                 val results = mutableSetOf<String>()
                 var maxLength = Int.MAX_VALUE - 1
