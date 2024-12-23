@@ -113,6 +113,11 @@ class AdventOfCodeTasksTest {
         runTaskTest(Sellers(), 12759339434L, 1405)
     }
 
+    @Test
+    fun day23() {
+        runTaskTest(Groups(), 1054, "ch,cz,di,gb,ht,ku,lu,tw,vf,vt,wo,xz,zk")
+    }
+
     private fun runTaskTest(task: AdventOfCodeTask, part1Result: Any, part2Result: Any) {
         assertEquals(part1Result, task.run())
         assertEquals(part2Result, task.run(part2 = true))
