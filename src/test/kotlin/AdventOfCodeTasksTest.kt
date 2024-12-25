@@ -118,6 +118,16 @@ class AdventOfCodeTasksTest {
         runTaskTest(Groups(), 1054, "ch,cz,di,gb,ht,ku,lu,tw,vf,vt,wo,xz,zk")
     }
 
+    @Test
+    fun day24() {
+        runTaskTest(Wires(), 57270694330992L, "gwh,jct,rcb,wbw,wgb,z09,z21,z39")
+    }
+
+    @Test
+    fun day25() {
+        runTaskTest(Locks(), 3155, 3155)
+    }
+
     private fun runTaskTest(task: AdventOfCodeTask, part1Result: Any, part2Result: Any) {
         assertEquals(part1Result, task.run())
         assertEquals(part2Result, task.run(part2 = true))
