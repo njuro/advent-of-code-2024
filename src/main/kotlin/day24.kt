@@ -70,7 +70,6 @@ class Wires : AdventOfCodeTask {
                     getOutputsForPrefix('x').toLong(2) + getOutputsForPrefix('y').toLong(2)
                     ).toBinaryString()
 
-
             do {
                 calculateValues()
                 val actual = getOutputsForPrefix('z')
