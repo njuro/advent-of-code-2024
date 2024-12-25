@@ -3,50 +3,98 @@ import utils.readInputBlock
 /** [https://adventofcode.com/2024/day/24] */
 class Wires : AdventOfCodeTask {
     override fun run(part2: Boolean): Any {
-        val wires = mutableMapOf<String, Int>()
         val (initial, rawGates) = readInputBlock("24.txt").split("\n\n").map(String::trim).map(String::lines)
+
+        val initialWires = mutableMapOf<String, Int>()
         initial.forEach {
             val (wire, value) = it.split(": ")
-            wires[wire] = value.toInt()
+            initialWires[wire] = value.toInt()
         }
-        val gates = rawGates.associate {
+        var wires = initialWires.toMutableMap()
+
+        data class Gate(val inputs: Set<String>, val operator: String, val output: String)
+
+        val gates = rawGates.map {
             val (input1, operation, input2, _, output) = it.split(" ")
-            output to (setOf(input1, input2) to operation)
-        }.toMutableMap()
+            Gate(setOf(input1, input2), operation, output)
+        }.toMutableSet()
 
         fun getOutputsForPrefix(prefix: Char) =
             wires.entries.filter { it.key.startsWith(prefix) }.sortedByDescending { it.key }
                 .joinToString("") { it.value.toString() }
 
-        while (gates.isNotEmpty()) {
-            val gate = gates.entries.first { (_, value) -> value.first.all { it in wires } }
-            gates.remove(gate.key)
-            val (inputs, operator) = gate.value
-            val operation = when (operator) {
-                "AND" -> Int::and
-                "OR" -> Int::or
-                "XOR" -> Int::xor
-                else -> error("Invalid operation")
+
+        fun calculateValues() {
+            wires = initialWires.toMutableMap()
+            val unprocessedGates = gates.toMutableSet()
+            while (unprocessedGates.isNotEmpty()) {
+                val gate =
+                    unprocessedGates.first { gate -> gate.inputs.all { it in wires } }.also(unprocessedGates::remove)
+                val operation = when (gate.operator) {
+                    "AND" -> Int::and
+                    "OR" -> Int::or
+                    "XOR" -> Int::xor
+                    else -> error("Invalid operation")
+                }
+                wires[gate.output] = gate.inputs.map(wires::getValue).reduce(operation)
             }
-            wires[gate.key] = inputs.map(wires::getValue).reduce(operation)
         }
+
         return if (part2) {
+            val faultyGates = mutableSetOf<String>()
+
             fun Long.toBinaryString(): String =
                 if (this > 0) div(2).toBinaryString() + mod(2) else ""
 
-            val actual = getOutputsForPrefix('z')
+            fun Char.index(index: Int) = "$this${index.toString().padStart(2, '0')}"
+
+            fun findGate(input1: String? = null, input2: String? = null, operator: String? = null): Gate =
+                gates.single { gate ->
+                    listOfNotNull(
+                        input1?.let { it in gate.inputs },
+                        input2?.let { it in gate.inputs },
+                        operator?.let { it == gate.operator }
+                    ).reduce(Boolean::and)
+                }
+
+            fun swap(output1: String, output2: String) {
+                faultyGates.add(output1)
+                faultyGates.add(output2)
+                val gate1 = gates.first { it.output == output1 }.also(gates::remove)
+                val gate2 = gates.first { it.output == output2 }.also(gates::remove)
+                gates.add(gate1.copy(output = output2))
+                gates.add(gate2.copy(output = output1))
+            }
+
             val expected = (
                     getOutputsForPrefix('x').toLong(2) + getOutputsForPrefix('y').toLong(2)
                     ).toBinaryString()
-            val faultyBits = expected.reversed().zip(actual.reversed()).withIndex()
-                .filter { (_, value) -> value.first != value.second }.map { it.index }
-            val faultyGates = listOf("wgb", "wbw", "z09", "gwh", "rcb", "z21", "z39", "jct")
-            println(faultyBits)
-//            do {
-//                // TODO
-//            } while (faultyBits.isNotEmpty())
+
+
+            do {
+                calculateValues()
+                val actual = getOutputsForPrefix('z')
+                val faultyBit = expected.reversed().zip(actual.reversed()).withIndex()
+                    .filter { (_, value) -> value.first != value.second }.map { it.index }.firstOrNull() ?: break
+
+                val previousAndOutput = findGate('x'.index(faultyBit - 1), 'y'.index(faultyBit - 1), "AND").output
+                val carryIn = findGate(previousAndOutput, operator = "OR").output
+                val xorOutput = findGate('x'.index(faultyBit), 'y'.index(faultyBit), "XOR").output
+                val andOutput = findGate('x'.index(faultyBit), 'y'.index(faultyBit), "AND").output
+
+                val sumGate = findGate(carryIn, operator = "XOR")
+                if (sumGate.inputs.first { it != carryIn } != xorOutput) {
+                    swap(xorOutput, andOutput)
+                }
+                if (sumGate.output != 'z'.index(faultyBit)) {
+                    swap(sumGate.output, 'z'.index(faultyBit))
+                }
+            } while (true)
             faultyGates.sorted().joinToString(",")
-        } else getOutputsForPrefix('z').toLong(2)
+        } else {
+            calculateValues()
+            getOutputsForPrefix('z').toLong(2)
+        }
     }
 }
 
